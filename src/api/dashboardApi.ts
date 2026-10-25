@@ -1,7 +1,8 @@
 
 import axios from "axios";
+import server_url from "./server_url";
 
-const API_URL = "http://localhost:5000/api/dashboard";
+const API_URL = `${server_url}/api/dashboard`;
 
 const getAuthConfig = () => {
   const token =

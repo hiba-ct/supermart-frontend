@@ -1,7 +1,8 @@
 import axios from "axios";
+import server_url from "./server_url";
 
 const API_URL =
-  "http://localhost:5000/api/purchases";
+  `${server_url}/api/purchases`;
 
 // ======================================================
 // AUTH HEADER
