@@ -41,6 +41,7 @@ export default function App() {
         </RTLLayout>
       </ThemeCustomization>
       <Metrics />
+    
     </>
   );
 }

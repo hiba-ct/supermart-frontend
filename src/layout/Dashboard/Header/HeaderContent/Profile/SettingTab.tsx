@@ -1,76 +1,91 @@
+
 import { useState, MouseEvent, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
-// material-ui
 import List from '@mui/material/List';
-import Link from '@mui/material/Link';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 
-// assets
-import { Clipboard, I24Support, Lock1, Messages1, Profile } from 'iconsax-reactjs';
-
-// ==============================|| HEADER PROFILE - SETTING TAB ||============================== //
+import {
+  Setting2,
+  Profile,
+  Notification,
+  ShieldSecurity
+} from 'iconsax-reactjs';
 
 export default function SettingTab() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
   const [selectedIndex, setSelectedIndex] = useState<number>();
-  const handleListItemClick = (event: MouseEvent<HTMLDivElement>, index: number, route: string = '') => {
+
+  const handleListItemClick = (
+    event: MouseEvent<HTMLDivElement>,
+    index: number,
+    route = ''
+  ) => {
     setSelectedIndex(index);
-    if (route && route !== '') {
+
+    if (route) {
       navigate(route);
     }
   };
 
   useEffect(() => {
-    const pathToIndex: { [key: string]: number } = {
-      '/apps/profiles/account/settings': 1
+    const pathToIndex: Record<string, number> = {
+      '/apps/profiles/account/settings': 0
     };
 
-    setSelectedIndex(pathToIndex[pathname] ?? undefined);
+    setSelectedIndex(pathToIndex[pathname]);
   }, [pathname]);
 
   return (
-    <List component="nav" sx={{ p: 0, '& .MuiListItemIcon-root': { minWidth: 32 } }}>
-      <Link style={{ textDecoration: 'none' }} target="_blank" href="https://phoenixcoded.authordesk.app/">
-        <ListItemButton selected={selectedIndex === 0} onClick={(event: MouseEvent<HTMLDivElement>) => handleListItemClick(event, 0)}>
-          <ListItemIcon>
-            <I24Support variant="Bulk" size={18} />
-          </ListItemIcon>
-          <ListItemText primary="Support" />
-        </ListItemButton>
-      </Link>
+    <List
+      component="nav"
+      sx={{ p: 0, '& .MuiListItemIcon-root': { minWidth: 32 } }}
+    >
       <ListItemButton
-        selected={selectedIndex === 1}
-        onClick={(event: MouseEvent<HTMLDivElement>) => handleListItemClick(event, 1, '/apps/profiles/account/settings')}
+        selected={selectedIndex === 0}
+        onClick={(event) =>
+          handleListItemClick(
+            event,
+            0,
+            '/apps/profiles/account/settings'
+          )
+        }
+      >
+        <ListItemIcon>
+          <Setting2 variant="Bulk" size={18} />
+        </ListItemIcon>
+        <ListItemText primary="Account Settings" />
+      </ListItemButton>
+
+      <ListItemButton
+        onClick={(event) => handleListItemClick(event, 1)}
+      >
+        <ListItemIcon>
+          <Notification variant="Bulk" size={18} />
+        </ListItemIcon>
+        <ListItemText primary="Notification Preferences" />
+      </ListItemButton>
+
+      <ListItemButton
+        onClick={(event) => handleListItemClick(event, 2)}
+      >
+        <ListItemIcon>
+          <ShieldSecurity variant="Bulk" size={18} />
+        </ListItemIcon>
+        <ListItemText primary="Security" />
+      </ListItemButton>
+
+      <ListItemButton
+        onClick={(event) => handleListItemClick(event, 3)}
       >
         <ListItemIcon>
           <Profile variant="Bulk" size={18} />
         </ListItemIcon>
-        <ListItemText primary="Account Settings" />
-      </ListItemButton>
-      <ListItemButton selected={selectedIndex === 2} onClick={(event: MouseEvent<HTMLDivElement>) => handleListItemClick(event, 2)}>
-        <ListItemIcon>
-          <Lock1 variant="Bulk" size={18} />
-        </ListItemIcon>
-        <ListItemText primary="Privacy Center" />
-      </ListItemButton>
-      <Link style={{ textDecoration: 'none' }} target="_blank" href="https://phoenixcoded.authordesk.app/">
-        <ListItemButton selected={selectedIndex === 3} onClick={(event: MouseEvent<HTMLDivElement>) => handleListItemClick(event, 3)}>
-          <ListItemIcon>
-            <Messages1 variant="Bulk" size={18} />
-          </ListItemIcon>
-          <ListItemText primary="Feedback" />
-        </ListItemButton>
-      </Link>
-      <ListItemButton selected={selectedIndex === 4} onClick={(event: MouseEvent<HTMLDivElement>) => handleListItemClick(event, 4)}>
-        <ListItemIcon>
-          <Clipboard variant="Bulk" size={18} />
-        </ListItemIcon>
-        <ListItemText primary="History" />
+        <ListItemText primary="Business Profile" />
       </ListItemButton>
     </List>
   );

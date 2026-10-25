@@ -48,12 +48,15 @@ function ConfigProvider({ children }: ConfigProviderProps) {
     });
   };
 
-  const onChangeLocalization = (lang: I18n) => {
-    setConfig({
-      ...config,
-      i18n: lang
-    });
-  };
+  
+const onChangeLocalization = (lang: I18n) => {
+  setConfig({
+    ...config,
+    i18n: lang,
+    themeDirection: lang === 'ar' ? 'rtl' : 'ltr'
+  });
+};
+
 
   const onChangeMode = (mode: ThemeMode) => {
     setConfig({

@@ -1,45 +1,34 @@
-import { useState } from 'react';
 
-// material-ui
-import { useTheme } from '@mui/material/styles';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+// Material UI
 import Drawer from '@mui/material/Drawer';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
 
-// project-imports
-import MessageCard from 'components/cards/statistics/MessageCard';
+// Project imports
 import IconButton from 'components/@extended/IconButton';
 import MainCard from 'components/MainCard';
-import SimpleBar from 'components/third-party/SimpleBar';
-import { ThemeMode } from 'config';
+import { NotificationStatus, Add } from 'iconsax-reactjs';
 
-// assets
-import { Add, NotificationStatus } from 'iconsax-reactjs';
-
-import message1Light from 'assets/images/widget/message/message1Light.svg';
-import message1Dark from 'assets/images/widget/message/message1Dark.svg';
-import message2Light from 'assets/images/widget/message/message2Light.svg';
-import message2Dark from 'assets/images/widget/message/message2Dark.svg';
-import message3Light from 'assets/images/widget/message/message3Light.svg';
-import message3Dark from 'assets/images/widget/message/message3Dark.svg';
-import message4Light from 'assets/images/widget/message/message4Light.svg';
-import message4Dark from 'assets/images/widget/message/message4Dark.svg';
-
-// ==============================|| HEADER CONTENT - CUSTOMIZATION ||============================== //
+// ==============================|| SUPERMARKET QUICK PANEL ||============================== //
 
 export default function Customization() {
-  const theme = useTheme();
-
-  const message1 = theme.palette.mode === ThemeMode.DARK ? message1Dark : message1Light;
-  const message2 = theme.palette.mode === ThemeMode.DARK ? message2Dark : message2Light;
-  const message3 = theme.palette.mode === ThemeMode.DARK ? message3Dark : message3Light;
-  const message4 = theme.palette.mode === ThemeMode.DARK ? message4Dark : message4Light;
-
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate();
+
   const handleToggle = () => {
-    setOpen(!open);
+    setOpen((previous) => !previous);
+  };
+
+  const openPage = (path: string) => {
+    setOpen(false);
+    navigate(path);
   };
 
   return (
@@ -49,98 +38,204 @@ export default function Customization() {
           color="secondary"
           variant="light"
           onClick={handleToggle}
-          aria-label="settings toggler"
+          aria-label="Open supermarket quick panel"
+          aria-expanded={open}
           size="large"
           sx={(theme) => ({
             p: 1,
             color: 'secondary.main',
             bgcolor: open ? 'secondary.200' : 'secondary.100',
-            ...theme.applyStyles('dark', { bgcolor: open ? 'background.paper' : 'background.default' })
+            ...theme.applyStyles('dark', {
+              bgcolor: open ? 'background.paper' : 'background.default'
+            })
           })}
         >
           <NotificationStatus variant="Bulk" />
         </IconButton>
       </Box>
+
       <Drawer
         sx={{ zIndex: 2001 }}
         anchor="right"
         onClose={handleToggle}
         open={open}
-        slotProps={{ paper: { sx: { width: { xs: 350, sm: 474 } } } }}
+        slotProps={{
+          paper: {
+            sx: {
+              width: { xs: '100%', sm: 420 },
+              maxWidth: '100%'
+            }
+          }
+        }}
       >
         {open && (
-          <MainCard content={false} sx={{ border: 'none', borderRadius: 0, height: '100vh' }}>
-            <SimpleBar
-              sx={{
-                '& .simplebar-content': {
-                  display: 'flex',
-                  flexDirection: 'column'
-                }
-              }}
-            >
-              <Box sx={{ p: 2.5 }}>
-                <Stack direction="row" sx={{ gap: 1.5, alignItems: 'center', justifyContent: 'space-between' }}>
-                  <Typography variant="h5">What’s new announcement?</Typography>
-                  <IconButton color="error" sx={{ p: 0 }} onClick={handleToggle}>
-                    <Add size={28} style={{ transform: 'rotate(45deg)' }} />
-                  </IconButton>
-                </Stack>
-                <Grid container spacing={1.5} sx={{ mt: 2 }}>
-                  <Grid size={12}>
-                    <Typography variant="h6">Today</Typography>
-                  </Grid>
-                  <Grid size={12}>
-                    <MessageCard
-                      status={{ label: 'New Feature', color: 'success' }}
-                      time="just now"
-                      title="Select Business Unit"
-                      message="You can use the Analytics Dashboard to explore how many new users download reports daily and monthly"
-                      src={message1}
-                      actions={[
-                        {
-                          label: 'Skip Intro',
-                          button: { variant: 'outlined', color: 'secondary', fullWidth: true }
-                        },
-                        {
-                          label: 'Next',
-                          button: { variant: 'contained', fullWidth: true }
-                        }
-                      ]}
-                    />
-                  </Grid>
-                  <Grid size={12}>
-                    <MessageCard
-                      status={{ label: 'Meeting', color: 'warning' }}
-                      time="2 min ago"
-                      title="General Meeting for update"
-                      message="You can use the Dashboard to explore how many new users download reports daily and monthly"
-                      src={message2}
-                    />
-                  </Grid>
-                  <Grid sx={{ my: 1.25 }} size={12}>
-                    <Typography variant="h6">Yesterday</Typography>
-                  </Grid>
-                  <Grid size={12}>
-                    <MessageCard
-                      status={{ label: 'Improvement', color: 'primary' }}
-                      time="2 hours ago"
-                      title="Widgets update"
-                      message="We've made some updates to the emendable widget which we think you are going to love."
-                      src={message3}
-                    />
-                  </Grid>
-                  <Grid size={12}>
-                    <MessageCard
-                      status={{ label: 'Improvement', color: 'primary' }}
-                      time="1 day ago"
-                      title="Coming soon dark mode"
-                      message="We've made some updates to the emendable widget which we think you are going to love."
-                      src={message4}
-                    />
-                  </Grid>
+          <MainCard
+            content={false}
+            sx={{
+              border: 'none',
+              borderRadius: 0,
+              minHeight: '100%',
+              height: '100%'
+            }}
+          >
+            <Box sx={{ p: 3 }}>
+              <Stack
+                direction="row"
+                alignItems="center"
+                justifyContent="space-between"
+                spacing={2}
+              >
+                <Box>
+                  <Typography variant="h4">
+                    SuperMart Quick Panel
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ mt: 0.5 }}
+                  >
+                    Your supermarket at a glance
+                  </Typography>
+                </Box>
+
+                <IconButton
+                  color="secondary"
+                  onClick={handleToggle}
+                  aria-label="Close quick panel"
+                >
+                  <Add
+                    size={26}
+                    style={{ transform: 'rotate(45deg)' }}
+                  />
+                </IconButton>
+              </Stack>
+
+              <Divider sx={{ my: 2.5 }} />
+
+              <Typography variant="h5" sx={{ mb: 1.5 }}>
+                Quick Access
+              </Typography>
+
+              <Grid container spacing={1.5}>
+                <Grid size={6}>
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    onClick={() => openPage('/supermarket/products')}
+                    sx={{ py: 1.5 }}
+                  >
+                    Products
+                  </Button>
                 </Grid>
+
+                <Grid size={6}>
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    onClick={() => openPage('/supermarket/inventory')}
+                    sx={{ py: 1.5 }}
+                  >
+                    Inventory
+                  </Button>
+                </Grid>
+
+                <Grid size={6}>
+                  <Button
+                    fullWidth
+                    variant="outlined"
+                    onClick={() => openPage('/supermarket/purchases')}
+                    sx={{ py: 1.5 }}
+                  >
+                    Purchases
+                  </Button>
+                </Grid>
+
+                <Grid size={6}>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    onClick={() => openPage('/supermarket/sales')}
+                    sx={{ py: 1.5 }}
+                  >
+                    New Sale / POS
+                  </Button>
+                </Grid>
+              </Grid>
+
+              <Divider sx={{ my: 3 }} />
+
+              <Typography variant="h5" sx={{ mb: 1 }}>
+                Business Management
+              </Typography>
+
+              <Stack spacing={1}>
+                <Button
+                  variant="text"
+                  fullWidth
+                  onClick={() => openPage('/supermarket/suppliers')}
+                  sx={{ justifyContent: 'flex-start', py: 1 }}
+                >
+                  Suppliers
+                </Button>
+
+                <Button
+                  variant="text"
+                  fullWidth
+                  onClick={() => openPage('/supermarket/reports')}
+                  sx={{ justifyContent: 'flex-start', py: 1 }}
+                >
+                  Sales & Business Reports
+                </Button>
+
+                <Button
+                  variant="text"
+                  fullWidth
+                  onClick={() => openPage('/supermarket/employees')}
+                  sx={{ justifyContent: 'flex-start', py: 1 }}
+                >
+                  Employee Management
+                </Button>
+
+                <Button
+                  variant="text"
+                  fullWidth
+                  onClick={() => openPage('/supermarket/attendance')}
+                  sx={{ justifyContent: 'flex-start', py: 1 }}
+                >
+                  Daily Attendance
+                </Button>
+              </Stack>
+
+              <Divider sx={{ my: 3 }} />
+
+              <Box
+                sx={{
+                  p: 2,
+                  borderRadius: 2,
+                  bgcolor: 'action.hover'
+                }}
+              >
+                <Typography variant="subtitle1" fontWeight={600}>
+                  Stock & Expiry Monitoring
+                </Typography>
+
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ mt: 0.5, mb: 1.5 }}
+                >
+                  Review stock levels and product expiry dates in Inventory.
+                </Typography>
+
+                <Button
+                  variant="contained"
+                  size="small"
+                  onClick={() => openPage('/supermarket/inventory')}
+                >
+                  Check Inventory
+                </Button>
               </Box>
-            </SimpleBar>
+            </Box>
           </MainCard>
         )}
       </Drawer>

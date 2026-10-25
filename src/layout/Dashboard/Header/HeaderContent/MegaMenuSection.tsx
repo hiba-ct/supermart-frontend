@@ -1,48 +1,76 @@
+
 import { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 
-// material-ui
-import Button from '@mui/material/Button';
-import CardMedia from '@mui/material/CardMedia';
+// Material UI
+import Box from '@mui/material/Box';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import ListSubheader from '@mui/material/ListSubheader';
 import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 
-// project-imports
+// Project imports
 import Dot from 'components/@extended/Dot';
 import IconButton from 'components/@extended/IconButton';
 import Transitions from 'components/@extended/Transitions';
-import AnimateButton from 'components/@extended/AnimateButton';
 import MainCard from 'components/MainCard';
-import { DRAWER_WIDTH } from 'config';
 
-// assets
-import { Windows, ArrowRight3 } from 'iconsax-reactjs';
-import cardBack from 'assets/images/widget/img-dropbox-bg.svg';
-import imageChart from 'assets/images/mega-menu/chart.svg';
+// Icons
+import { Windows } from 'iconsax-reactjs';
 
-// ==============================|| HEADER CONTENT - MEGA MENU SECTION ||============================== //
+// ==============================|| SUPERMARKET QUICK MENU ||============================== //
+
+const menuGroups = [
+  {
+    title: 'Product Management',
+    items: [
+      { label: 'Products', path: '/supermarket/products' },
+      { label: 'Categories', path: '/supermarket/categories' },
+      { label: 'Inventory', path: '/supermarket/inventory' }
+    ]
+  },
+  {
+    title: 'Purchasing & Sales',
+    items: [
+      { label: 'Suppliers', path: '/supermarket/suppliers' },
+      { label: 'Purchases', path: '/supermarket/purchases' },
+      { label: 'Sales / POS', path: '/supermarket/sales' },
+      { label: 'Sales Returns', path: '/supermarket/sales-returns' }
+    ]
+  },
+  {
+    title: 'Business Operations',
+    items: [
+      { label: 'Reports', path: '/supermarket/reports' },
+      { label: 'Employees', path: '/supermarket/employees' },
+      { label: 'Attendance', path: '/supermarket/attendance' }
+    ]
+  }
+];
 
 export default function MegaMenuSection() {
-  const anchorRef = useRef<any>(null);
+  const anchorRef = useRef<HTMLButtonElement | null>(null);
   const [open, setOpen] = useState(false);
+
   const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
+    setOpen((previous) => !previous);
   };
 
   const handleClose = (event: MouseEvent | TouchEvent) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+    if (
+      anchorRef.current &&
+      event.target instanceof Node &&
+      anchorRef.current.contains(event.target)
+    ) {
       return;
     }
+
     setOpen(false);
   };
 
@@ -51,10 +79,11 @@ export default function MegaMenuSection() {
       <IconButton
         color="secondary"
         variant="light"
-        aria-label="open profile"
+        aria-label="Open supermarket quick menu"
         ref={anchorRef}
-        aria-controls={open ? 'profile-grow' : undefined}
+        aria-controls={open ? 'supermarket-quick-menu' : undefined}
         aria-haspopup="true"
+        aria-expanded={open}
         onClick={handleToggle}
         size="large"
         sx={(theme) => ({
@@ -62,228 +91,177 @@ export default function MegaMenuSection() {
           ml: { xs: 0, lg: -2 },
           color: 'secondary.main',
           bgcolor: open ? 'secondary.200' : 'secondary.100',
-          ...theme.applyStyles('dark', { bgcolor: open ? 'background.paper' : 'background.default' })
+          ...theme.applyStyles('dark', {
+            bgcolor: open ? 'background.paper' : 'background.default'
+          })
         })}
       >
         <Windows variant="Bulk" />
       </IconButton>
+
       <Popper
+        id="supermarket-quick-menu"
         placement="bottom"
         open={open}
         anchorEl={anchorRef.current}
         role={undefined}
         transition
         disablePortal
-        popperOptions={{ modifiers: [{ name: 'offset', options: { offset: [-180, 9] } }] }}
+        popperOptions={{
+          modifiers: [
+            {
+              name: 'offset',
+              options: { offset: [-180, 9] }
+            }
+          ]
+        }}
+        sx={{
+          zIndex: 1300,
+          maxWidth: 'calc(100vw - 16px)'
+        }}
       >
         {({ TransitionProps }) => (
-          <Transitions type="grow" position="top" in={open} {...TransitionProps}>
+          <Transitions
+            type="grow"
+            position="top"
+            in={open}
+            {...TransitionProps}
+          >
             <Paper
               sx={(theme) => ({
                 boxShadow: theme.customShadows.z1,
-                minWidth: 750,
                 width: {
-                  md: `calc(100vw - 100px)`,
-                  lg: `calc(100vw - ${DRAWER_WIDTH + 100}px)`,
-                  xl: `calc(100vw - ${DRAWER_WIDTH + 140}px)`
+                  xs: 'calc(100vw - 32px)',
+                  sm: 680,
+                  md: 850
                 },
-                maxWidth: 1024,
-                borderRadius: 1.5
+                maxWidth: 'calc(100vw - 32px)',
+                borderRadius: 2,
+                overflow: 'hidden'
               })}
             >
               <ClickAwayListener onClickAway={handleClose}>
-                <MainCard elevation={0} border={false} content={false}>
-                  <Grid container>
-                    <Grid
-                      size={4}
-                      sx={(theme) => ({
-                        bgcolor: 'primary.darker',
-                        ...theme.applyStyles('dark', { bgcolor: 'primary.400' }),
-                        position: 'relative',
-                        '&:after': {
-                          content: '""',
-                          background: `url("${cardBack}") 100% / cover no-repeat`,
-                          position: 'absolute',
-                          top: '41%',
-                          left: 0,
-                          right: 0,
-                          bottom: 0,
-                          zIndex: 1,
-                          opacity: 0.5
-                        }
-                      })}
-                    >
-                      <Box sx={{ p: 4.5, pb: 3, position: 'inherit', zIndex: 2 }}>
-                        <Stack sx={(theme) => ({ color: 'background.paper', ...theme.applyStyles('dark', { color: 'text.primary' }) })}>
-                          <Typography variant="h2" sx={{ fontSize: '1.875rem', mb: 1 }}>
-                            Explore Components
-                          </Typography>
-                          <Typography variant="h6">
-                            Try Able Pro&apos;s component pages to check how it feels and suits as per your need.
-                          </Typography>
-                          <Stack direction="row" sx={{ justifyContent: 'space-between', alignItems: 'flex-end', mt: -1 }}>
-                            <AnimateButton>
-                              <Button
-                                variant="contained"
-                                color="secondary"
-                                sx={{
-                                  zIndex: 2,
-                                  color: 'text.primary',
-                                  bgcolor: 'background.paper',
-                                  '&:hover': { bgcolor: 'background.paper', color: 'text.primary' },
-                                  '& svg': { color: 'primary.main' }
-                                }}
-                                endIcon={<ArrowRight3 variant="Bulk" />}
-                                component={Link}
-                                to="/components-overview/buttons"
-                                target="_blank"
-                              >
-                                View All
-                              </Button>
-                            </AnimateButton>
-                            <CardMedia component="img" src={imageChart} alt="Chart" sx={{ mr: -2.5, mb: -2.5, width: 124 }} />
-                          </Stack>
-                        </Stack>
-                      </Box>
-                    </Grid>
-                    <Grid size={8}>
-                      <Box
-                        sx={{
-                          p: 4,
-                          '& .MuiList-root': { pb: 0 },
-                          '& .MuiListSubheader-root': { p: 0, pb: 1.5 },
-                          '& .MuiListItemButton-root': {
-                            p: 0.5,
-                            '&:hover': { bgcolor: 'transparent', '& .MuiTypography-root': { color: 'primary.main' } }
-                          },
-                          '& .MuiListItemIcon-root': { minWidth: 16 }
-                        }}
+                <MainCard
+                  elevation={0}
+                  border={false}
+                  content={false}
+                >
+                  {/* Menu heading */}
+                  <Box
+                    sx={{
+                      px: { xs: 2, sm: 3 },
+                      py: 2.5,
+                      bgcolor: 'primary.main',
+                      color: 'primary.contrastText'
+                    }}
+                  >
+                    <Typography variant="h4" sx={{ mb: 0.5 }}>
+                      SuperMart Quick Access
+                    </Typography>
+
+                    <Typography variant="body2" sx={{ opacity: 0.9 }}>
+                      Manage your supermarket operations from one place.
+                    </Typography>
+                  </Box>
+
+                  {/* Menu groups */}
+                  <Grid
+                    container
+                    spacing={2}
+                    sx={{ p: { xs: 2, sm: 3 } }}
+                  >
+                    {menuGroups.map((group) => (
+                      <Grid
+                        key={group.title}
+                        size={{ xs: 12, sm: 4 }}
                       >
-                        <Grid container spacing={6}>
-                          <Grid size={4}>
-                            <List
-                              component="nav"
-                              aria-labelledby="nested-list-user"
-                              subheader={
-                                <ListSubheader id="nested-list-user">
-                                  <Typography variant="subtitle1" sx={{ color: 'text.primary' }}>
-                                    Authentication
-                                  </Typography>
-                                </ListSubheader>
+                        <Typography
+                          variant="subtitle1"
+                          sx={{
+                            fontWeight: 700,
+                            mb: 1,
+                            color: 'text.primary'
+                          }}
+                        >
+                          {group.title}
+                        </Typography>
+
+                        <List
+                          component="nav"
+                          disablePadding
+                          aria-label={group.title}
+                          sx={{
+                            '& .MuiListItemButton-root': {
+                              borderRadius: 1.5,
+                              mb: 0.5,
+                              px: 1,
+                              py: 1,
+                              transition: 'all 0.2s ease',
+                              '&:hover': {
+                                bgcolor: 'action.hover',
+                                '& .MuiTypography-root': {
+                                  color: 'primary.main'
+                                }
                               }
+                            },
+                            '& .MuiListItemIcon-root': {
+                              minWidth: 22
+                            }
+                          }}
+                        >
+                          {group.items.map((item) => (
+                            <ListItemButton
+                              key={item.path}
+                              component={Link}
+                              to={item.path}
+                              onClick={() => setOpen(false)}
                             >
-                              <ListItemButton disableRipple component={Link} target="_blank" to="/auth/login">
-                                <ListItemIcon>
-                                  <Dot size={6} color="secondary" variant="outlined" />
-                                </ListItemIcon>
-                                <ListItemText primary="Login" />
-                              </ListItemButton>
-                              <ListItemButton disableRipple component={Link} target="_blank" to="/auth/register">
-                                <ListItemIcon>
-                                  <Dot size={6} color="secondary" variant="outlined" />
-                                </ListItemIcon>
-                                <ListItemText primary="Register" />
-                              </ListItemButton>
-                              <ListItemButton disableRipple component={Link} target="_blank" to="/auth/reset-password">
-                                <ListItemIcon>
-                                  <Dot size={6} color="secondary" variant="outlined" />
-                                </ListItemIcon>
-                                <ListItemText primary="Reset Password" />
-                              </ListItemButton>
-                              <ListItemButton disableRipple component={Link} target="_blank" to="/auth/forgot-password">
-                                <ListItemIcon>
-                                  <Dot size={6} color="secondary" variant="outlined" />
-                                </ListItemIcon>
-                                <ListItemText primary="Forgot Password" />
-                              </ListItemButton>
-                              <ListItemButton disableRipple component={Link} target="_blank" to="/auth/code-verification">
-                                <ListItemIcon>
-                                  <Dot size={6} color="secondary" variant="outlined" />
-                                </ListItemIcon>
-                                <ListItemText primary="Verification Code" />
-                              </ListItemButton>
-                            </List>
-                          </Grid>
-                          <Grid size={4}>
-                            <List
-                              component="nav"
-                              aria-labelledby="nested-list-user"
-                              subheader={
-                                <ListSubheader id="nested-list-user">
-                                  <Typography variant="subtitle1" sx={{ color: 'text.primary' }}>
-                                    Other Pages
+                              <ListItemIcon>
+                                <Dot
+                                  size={7}
+                                  color="secondary"
+                                  variant="filled"
+                                />
+                              </ListItemIcon>
+
+                              <ListItemText
+                                primary={
+                                  <Typography
+                                    variant="body2"
+                                    sx={{ fontWeight: 500 }}
+                                  >
+                                    {item.label}
                                   </Typography>
-                                </ListSubheader>
-                              }
-                            >
-                              <ListItemButton disableRipple component={Link} to="#">
-                                <ListItemIcon>
-                                  <Dot size={6} color="secondary" variant="outlined" />
-                                </ListItemIcon>
-                                <ListItemText primary="About us" />
-                              </ListItemButton>
-                              <ListItemButton disableRipple component={Link} to="/contact-us" target="_blank">
-                                <ListItemIcon>
-                                  <Dot size={6} color="secondary" variant="outlined" />
-                                </ListItemIcon>
-                                <ListItemText primary="Contact us" />
-                              </ListItemButton>
-                              <ListItemButton disableRipple component={Link} to="/price/price1">
-                                <ListItemIcon>
-                                  <Dot size={6} color="secondary" variant="outlined" />
-                                </ListItemIcon>
-                                <ListItemText primary="Pricing" />
-                              </ListItemButton>
-                              <ListItemButton disableRipple component={Link} to="/apps/profiles/user/payment">
-                                <ListItemIcon>
-                                  <Dot size={6} color="secondary" variant="outlined" />
-                                </ListItemIcon>
-                                <ListItemText primary="Payment" />
-                              </ListItemButton>
-                              <ListItemButton disableRipple component={Link} target="_blank" to="/maintenance/under-construction">
-                                <ListItemIcon>
-                                  <Dot size={6} color="secondary" variant="outlined" />
-                                </ListItemIcon>
-                                <ListItemText primary="Construction" />
-                              </ListItemButton>
-                              <ListItemButton disableRipple component={Link} target="_blank" to="/maintenance/coming-soon">
-                                <ListItemIcon>
-                                  <Dot size={6} color="secondary" variant="outlined" />
-                                </ListItemIcon>
-                                <ListItemText primary="Coming Soon" />
-                              </ListItemButton>
-                            </List>
-                          </Grid>
-                          <Grid size={4}>
-                            <List
-                              component="nav"
-                              aria-labelledby="nested-list-user"
-                              subheader={
-                                <ListSubheader id="nested-list-user">
-                                  <Typography variant="subtitle1" sx={{ color: 'text.primary' }}>
-                                    SAAS Pages
-                                  </Typography>
-                                </ListSubheader>
-                              }
-                            >
-                              <ListItemButton disableRipple component={Link} target="_blank" to="/maintenance/404">
-                                <ListItemIcon>
-                                  <Dot size={6} color="secondary" variant="outlined" />
-                                </ListItemIcon>
-                                <ListItemText primary="404 Error" />
-                              </ListItemButton>
-                              <ListItemButton disableRipple component={Link} target="_blank" to="">
-                                <ListItemIcon>
-                                  <Dot size={6} color="secondary" variant="outlined" />
-                                </ListItemIcon>
-                                <ListItemText primary="Landing" />
-                              </ListItemButton>
-                            </List>
-                          </Grid>
-                        </Grid>
-                      </Box>
-                    </Grid>
+                                }
+                              />
+                            </ListItemButton>
+                          ))}
+                        </List>
+                      </Grid>
+                    ))}
                   </Grid>
+
+                  {/* Footer */}
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    alignItems="center"
+                    sx={{
+                      px: { xs: 2, sm: 3 },
+                      py: 1.5,
+                      borderTop: 1,
+                      borderColor: 'divider',
+                      bgcolor: 'background.default'
+                    }}
+                  >
+                    <Typography variant="caption" color="text.secondary">
+                      Supermarket Management System
+                    </Typography>
+
+                    <Typography variant="caption" color="text.secondary">
+                      Quick Navigation
+                    </Typography>
+                  </Stack>
                 </MainCard>
               </ClickAwayListener>
             </Paper>

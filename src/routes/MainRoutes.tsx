@@ -1,6 +1,11 @@
-import { lazy } from 'react';
+import { lazy, Suspense } from 'react';
 import Loadable from 'components/Loadable';
 import DashboardLayout from 'layout/Dashboard';
+import Sales from 'pages/supermarket/sales';
+import SuperMartHome from '../../public/SuperMartHome';
+
+
+
 
 
 /* ================= DASHBOARD ================= */
@@ -9,63 +14,50 @@ const DashboardDefault = Loadable(lazy(() => import('pages/dashboard/default')))
 const DashboardAnalytics = Loadable(lazy(() => import('pages/dashboard/analytics')));
 const DashboardFinance = Loadable(lazy(() => import('pages/dashboard/finance')));
 
-/* ================= PMS BOOKINGS ================= */
 
-const BookingPage = Loadable(lazy(() => import('pages/pms/booking/create')));
-const BookingCalendar = Loadable(lazy(() => import('pages/pms/booking/calendar')));
-const BookingDetails = Loadable(lazy(() => import('pages/pms/booking/details')));
 
-/* ================= PMS ACCOUNTS ================= */
 
-const Ledger = Loadable(lazy(() => import('pages/pms/accounts/masters/ledger')));
-const BankAccount = Loadable(lazy(() => import('pages/pms/accounts/masters/bankAccount')));
+/* ================= SUPERMARKET ================= */
 
-/* ================= TRANSACTIONS ================= */
+const Products = Loadable(
+  lazy(() => import('pages/supermarket/products'))
+);
 
-const Payment = Loadable(lazy(() => import('pages/pms/accounts/transactions/Payment')));
-const PaymentForm = Loadable(lazy(() => import('pages/pms/accounts/transactions/Form')));
-const PaymentList = Loadable(lazy(() => import('pages/pms/accounts/transactions/List')));
+/* ================= categorry ================= */
 
-/* ================= ROOMS ================= */
+const Categories = Loadable(
+  lazy(() => import('pages/supermarket/categories'))
+);
 
-const RoomTypesPage = Loadable(lazy(() => import('pages/rooms/types')));
-const RoomsPage = Loadable(lazy(() => import('pages/rooms/create')));
-const RoomsCleaningPage = Loadable(lazy(() => import('pages/rooms/cleaning')));
-
-/* ================= GUESTS ================= */
-
-const GuestPage = Loadable(lazy(() => import('pages/pms/guests/create')));
-const GuestDetails = Loadable(lazy(() => import('pages/pms/guests/details')));
-const GuestFeedback = Loadable(lazy(() => import('pages/pms/guests/feedback')));
-
-/* ================= BILLING ================= */
-
-const BillingPage = Loadable(lazy(() => import('pages/pms/billing/create')));
-const PendingPaymentPage = Loadable(lazy(() => import('pages/pms/billing/pending')));
-const InvoicePage = Loadable(lazy(() => import('pages/pms/billing/invoice')));
-
-/* ================= HOUSEKEEPING ================= */
-
-const HousekeepingPage = Loadable(lazy(() => import('pages/pms/housekeeping/create')));
-
-/* ================= AMENITIES ================= */
-
-const AmenitiesPage = Loadable(lazy(() => import('pages/pms/amenities/create')));
-
-/* ================= OVERVIEW ================= */
-
-const OverviewPage = Loadable(lazy(() => import('pages/pms/overview/create')));
-
-/* ================= MAINTENANCE ================= */
-
-const MaintenanceRequestsPage = Loadable(lazy(() => import('pages/pms/maintenance/requests')));
-const MaintenanceIssuesPage = Loadable(lazy(() => import('pages/pms/maintenance/issues')));
-
+/* ================= Inventory ================= */
+const Inventory = Loadable(
+  lazy(() => import('pages/supermarket/inventory'))
+);
+/* ================= Suppliers ================= */
+const Suppliers = Loadable(
+  lazy(() => import('pages/supermarket/suppliers'))
+);
+/* ================= purchases ================= */
+const Purchases = Loadable(
+  lazy(() => import('pages/supermarket/purchases'))
+);
+/* ================= Reports ================= */
+const SupermarketReports = lazy(
+  () => import('pages/supermarket/reports')
+);
+/* ================= SalesReturns ================= */
+const SalesReturns = lazy(
+  () => import("pages/supermarket/salesReturns")
+);
+/* ================= Employees ================= */
+const Employees = lazy(() => import('pages/supermarket/employees'));
+const Attendance = lazy(() => import("pages/supermarket/attendance"));
 /* ================= ERROR ================= */
 
 const MaintenanceError = Loadable(lazy(() => import('pages/maintenance/error/404')));
 
-const MainRoutes = {
+const MainRoutes =  
+  {
   path: '/',
   element: <DashboardLayout />,
   children: [
@@ -78,74 +70,68 @@ const MainRoutes = {
       ]
     },
 
-    /* ================= PMS ================= */
+   
+/* SUPERMARKET */
 
-    {
-      path: 'pms',
-      children: [
 
-        /* BOOKINGS */
 
-        { path: 'bookings/create', element: <BookingPage /> },
-        { path: 'bookings/calendar', element: <BookingCalendar /> },
-        { path: 'bookings/details', element: <BookingDetails /> },
+{
+  path: 'supermarket/products',
+  element: <Products />
+},
 
-        /* ACCOUNTS MASTERS */
+{
+  path: 'supermarket/categories',
+  element: <Categories />
+},
 
-        { path: 'accounts/masters/ledger', element: <Ledger /> },
-        { path: 'accounts/masters/bankaccount', element: <BankAccount /> },
+{
+  path: 'supermarket/inventory',
+  element: <Inventory />
+},
 
-        /* ACCOUNTS TRANSACTIONS */
+{
+  path: 'supermarket/suppliers',
+  element: <Suppliers />
+},
+{
+  path: 'supermarket/purchases',
+  element: <Purchases />
+},
 
-        {
-          path: 'accounts/transactions/payment/:type',
-          element: <Payment />,
-          children: [
-            { path: 'create', element: <PaymentForm /> },
-            { path: 'edit/:id', element: <PaymentForm /> },
-            { path: 'list', element: <PaymentList /> }
-          ]
-        },
+{
+  path: 'supermarket/sales',
+  element: <Sales />
+},
+{
+  path:'/supermarket/sales-returns',
+  element:<SalesReturns />
+},
+{
+  path: '/supermarket/reports',
+  element: <SupermarketReports />
+},
+{
+  path: '/supermarket/employees',
+  element: (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Employees />
+    </Suspense>
+  )
+},
+{
+  path: "/supermarket/attendance",
+  element: (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Attendance />
+    </Suspense>
+  )
+},
 
-        /* ROOMS */
-
-        { path: 'rooms/types', element: <RoomTypesPage /> },
-        { path: 'rooms/create', element: <RoomsPage /> },
-        { path: 'rooms/cleaning', element: <RoomsCleaningPage /> },
-
-        /* GUESTS */
-
-        { path: 'guests/create', element: <GuestPage /> },
-        { path: 'guests/details/:id', element: <GuestDetails /> },
-        { path: 'guests/feedback', element: <GuestFeedback /> },
-
-        /* BILLING */
-
-        { path: 'billing/create', element: <BillingPage /> },
-        { path: 'billing/pending', element: <PendingPaymentPage /> },
-        { path: 'billing/invoice', element: <InvoicePage /> },
-
-        /* HOUSEKEEPING */
-
-        { path: 'housekeeping/create', element: <HousekeepingPage /> },
-
-        /* AMENITIES */
-
-        { path: 'amenities/create', element: <AmenitiesPage /> },
-
-        /* OVERVIEW */
-
-        { path: 'overview/create', element: <OverviewPage /> },
-
-        /* MAINTENANCE */
-
-        { path: 'maintenance/requests', element: <MaintenanceRequestsPage /> },
-        { path: 'maintenance/issues', element: <MaintenanceIssuesPage /> }
-      ]
-    },
 
     { path: '*', element: <MaintenanceError /> }
   ]
-};
+
+}
 
 export default MainRoutes;

@@ -1,16 +1,18 @@
+
 import { useState, MouseEvent, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 
-// material-ui
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 
-// assets
-import { Card, Edit2, Logout, Profile, Profile2User } from 'iconsax-reactjs';
-
-// ==============================|| HEADER PROFILE - PROFILE TAB ||============================== //
+import {
+  Profile,
+  Profile2User,
+  Setting2,
+  Logout
+} from 'iconsax-reactjs';
 
 interface Props {
   handleLogout: () => void;
@@ -21,65 +23,72 @@ export default function ProfileTab({ handleLogout }: Props) {
   const { pathname } = useLocation();
 
   const [selectedIndex, setSelectedIndex] = useState<number>();
-  const handleListItemClick = (event: MouseEvent<HTMLDivElement>, index: number, route: string = '') => {
+
+  const handleListItemClick = (
+    event: MouseEvent<HTMLDivElement>,
+    index: number,
+    route = ''
+  ) => {
     setSelectedIndex(index);
 
-    if (route && route !== '') {
+    if (route) {
       navigate(route);
     }
   };
 
   useEffect(() => {
-    const pathToIndex: { [key: string]: number } = {
-      '/apps/profiles/user/personal': 0,
-      '/apps/profiles/account/basic': 1,
-      '/apps/profiles/account/personal': 3,
-      '/apps/invoice/details/1': 4
+    const pathToIndex: Record<string, number> = {
+      '/supermarket/employees': 1,
+      '/apps/profiles/account/settings': 2
     };
 
-    setSelectedIndex(pathToIndex[pathname] ?? undefined);
+    setSelectedIndex(pathToIndex[pathname]);
   }, [pathname]);
 
   return (
-    <List component="nav" sx={{ p: 0, '& .MuiListItemIcon-root': { minWidth: 32 } }}>
+    <List
+      component="nav"
+      sx={{ p: 0, '& .MuiListItemIcon-root': { minWidth: 32 } }}
+    >
       <ListItemButton
         selected={selectedIndex === 0}
-        onClick={(event: MouseEvent<HTMLDivElement>) => handleListItemClick(event, 0, '/apps/profiles/user/personal')}
-      >
-        <ListItemIcon>
-          <Edit2 variant="Bulk" size={18} />
-        </ListItemIcon>
-        <ListItemText primary="Edit Profile" />
-      </ListItemButton>
-      <ListItemButton
-        selected={selectedIndex === 1}
-        onClick={(event: MouseEvent<HTMLDivElement>) => handleListItemClick(event, 1, '/apps/profiles/account/basic')}
+        onClick={(event) => handleListItemClick(event, 0)}
       >
         <ListItemIcon>
           <Profile variant="Bulk" size={18} />
         </ListItemIcon>
-        <ListItemText primary="View Profile" />
+        <ListItemText primary="My Profile" />
       </ListItemButton>
 
       <ListItemButton
-        selected={selectedIndex === 3}
-        onClick={(event: MouseEvent<HTMLDivElement>) => handleListItemClick(event, 3, '/apps/profiles/account/personal')}
+        selected={selectedIndex === 1}
+        onClick={(event) =>
+          handleListItemClick(event, 1, '/supermarket/employees')
+        }
       >
         <ListItemIcon>
           <Profile2User variant="Bulk" size={18} />
         </ListItemIcon>
-        <ListItemText primary="Social Profile" />
+        <ListItemText primary="Employee Management" />
       </ListItemButton>
+
       <ListItemButton
-        selected={selectedIndex === 4}
-        onClick={(event: MouseEvent<HTMLDivElement>) => handleListItemClick(event, 4, '/apps/invoice/details/1')}
+        selected={selectedIndex === 2}
+        onClick={(event) =>
+          handleListItemClick(
+            event,
+            2,
+            '/apps/profiles/account/settings'
+          )
+        }
       >
         <ListItemIcon>
-          <Card variant="Bulk" size={18} />
+          <Setting2 variant="Bulk" size={18} />
         </ListItemIcon>
-        <ListItemText primary="Billing" />
+        <ListItemText primary="Account Settings" />
       </ListItemButton>
-      <ListItemButton selected={selectedIndex === 2} onClick={handleLogout}>
+
+      <ListItemButton onClick={handleLogout}>
         <ListItemIcon>
           <Logout variant="Bulk" size={18} />
         </ListItemIcon>

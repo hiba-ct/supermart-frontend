@@ -1,9 +1,8 @@
+
 import { useRef, useState } from 'react';
 
-// material-ui
 import useMediaQuery from '@mui/material/useMediaQuery';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
-import Grid from '@mui/material/Grid';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText';
@@ -11,65 +10,107 @@ import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
+import Stack from '@mui/material/Stack';
 
-// project-imports
 import IconButton from 'components/@extended/IconButton';
 import Transitions from 'components/@extended/Transitions';
 import MainCard from 'components/MainCard';
 
 import useConfig from 'hooks/useConfig';
-
-// assets
 import { LanguageSquare } from 'iconsax-reactjs';
 
-// types
 import { I18n } from 'types/config';
 
-// ==============================|| HEADER CONTENT - LOCALIZATION ||============================== //
+const languages: {
+  code: string;
+  label: string;
+  nativeLabel: string;
+  codeLabel: string;
+}[] = [
+  {
+    code: 'en',
+    label: 'English',
+    nativeLabel: 'English',
+    codeLabel: 'UK'
+  },
+  {
+    code: 'ml',
+    label: 'Malayalam',
+    nativeLabel: 'മലയാളം',
+    codeLabel: 'Malayalam'
+  },
+  {
+    code: 'hi',
+    label: 'Hindi',
+    nativeLabel: 'हिन्दी',
+    codeLabel: 'Hindi'
+  },
+  {
+    code: 'ar',
+    label: 'Arabic',
+    nativeLabel: 'العربية',
+    codeLabel: 'Arabic'
+  }
+];
 
 export default function Localization() {
-  const downMD = useMediaQuery((theme) => theme.breakpoints.down('md'));
+  const downMD = useMediaQuery((theme) =>
+    theme.breakpoints.down('md')
+  );
 
   const { i18n, onChangeLocalization } = useConfig();
 
-  const anchorRef = useRef<any>(null);
+  const anchorRef = useRef<HTMLButtonElement | null>(null);
   const [open, setOpen] = useState(false);
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
 
   const handleClose = (event: MouseEvent | TouchEvent) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+    if (
+      anchorRef.current &&
+      event.target instanceof Node &&
+      anchorRef.current.contains(event.target)
+    ) {
       return;
     }
+
     setOpen(false);
   };
 
-  const handleListItemClick = (lang: I18n) => {
-    onChangeLocalization(lang);
+  const handleLanguageChange = (code: string) => {
+    // The language must also be registered in Able Pro's
+    // I18n type, translation resources and configuration.
+    onChangeLocalization(code as I18n);
     setOpen(false);
   };
+
+  const selectedLanguage =
+    languages.find((language) => language.code === i18n);
 
   return (
     <Box sx={{ flexShrink: 0, ml: 0.5 }}>
       <IconButton
         color="secondary"
         variant="light"
-        aria-label="open localization"
+        aria-label="Choose language"
         ref={anchorRef}
         aria-controls={open ? 'localization-grow' : undefined}
         aria-haspopup="true"
-        onClick={handleToggle}
+        aria-expanded={open}
+        onClick={() => setOpen((previous) => !previous)}
         size="large"
         sx={(theme) => ({
           p: 1,
           color: 'secondary.main',
           bgcolor: open ? 'secondary.200' : 'secondary.100',
-          ...theme.applyStyles('dark', { bgcolor: open ? 'background.paper' : 'background.default' })
+          ...theme.applyStyles('dark', {
+            bgcolor: open
+              ? 'background.paper'
+              : 'background.default'
+          })
         })}
       >
         <LanguageSquare variant="Bulk" />
       </IconButton>
+
       <Popper
         placement={downMD ? 'bottom-start' : 'bottom'}
         open={open}
@@ -81,78 +122,73 @@ export default function Localization() {
           modifiers: [
             {
               name: 'offset',
-              options: {
-                offset: [downMD ? 0 : 0, 9]
-              }
+              options: { offset: [0, 9] }
             }
           ]
         }}
+        sx={{ zIndex: 1300 }}
       >
         {({ TransitionProps }) => (
-          <Transitions type="grow" position={downMD ? 'top-right' : 'top'} in={open} {...TransitionProps}>
-            <Paper sx={(theme) => ({ boxShadow: theme.customShadows.z1, borderRadius: 1.5 })}>
+          <Transitions
+            type="grow"
+            position={downMD ? 'top-right' : 'top'}
+            in={open}
+            {...TransitionProps}
+          >
+            <Paper
+              sx={(theme) => ({
+                boxShadow: theme.customShadows.z1,
+                borderRadius: 1.5
+              })}
+            >
               <ClickAwayListener onClickAway={handleClose}>
                 <MainCard border={false} content={false}>
-                  <List
-                    component="nav"
-                    sx={(theme) => ({
-                      p: 1,
-                      width: '100%',
-                      minWidth: 200,
-                      maxWidth: 290,
-                      bgcolor: theme.palette.background.paper,
-                      [theme.breakpoints.down('md')]: { maxWidth: 250 }
-                    })}
-                  >
-                    <ListItemButton selected={i18n === 'en'} onClick={() => handleListItemClick('en')}>
-                      <ListItemText
-                        primary={
-                          <Grid container>
-                            <Typography sx={{ color: 'text.primary' }}>English</Typography>
-                            <Typography variant="caption" sx={{ color: 'text.secondary', ml: '8px' }}>
-                              (UK)
-                            </Typography>
-                          </Grid>
-                        }
-                      />
-                    </ListItemButton>
-                    <ListItemButton selected={i18n === 'fr'} onClick={() => handleListItemClick('fr')}>
-                      <ListItemText
-                        primary={
-                          <Grid container>
-                            <Typography sx={{ color: 'text.primary' }}>français</Typography>
-                            <Typography variant="caption" sx={{ color: 'text.secondary', ml: '8px' }}>
-                              (French)
-                            </Typography>
-                          </Grid>
-                        }
-                      />
-                    </ListItemButton>
-                    <ListItemButton selected={i18n === 'ro'} onClick={() => handleListItemClick('ro')}>
-                      <ListItemText
-                        primary={
-                          <Grid container>
-                            <Typography sx={{ color: 'text.primary' }}>Română</Typography>
-                            <Typography variant="caption" sx={{ color: 'text.secondary', ml: '8px' }}>
-                              (Romanian)
-                            </Typography>
-                          </Grid>
-                        }
-                      />
-                    </ListItemButton>
-                    <ListItemButton selected={i18n === 'zh'} onClick={() => handleListItemClick('zh')}>
-                      <ListItemText
-                        primary={
-                          <Grid container>
-                            <Typography sx={{ color: 'text.primary' }}>中国人</Typography>
-                            <Typography variant="caption" sx={{ color: 'text.secondary', ml: '8px' }}>
-                              (Chinese)
-                            </Typography>
-                          </Grid>
-                        }
-                      />
-                    </ListItemButton>
-                  </List>
+                  <Box sx={{ p: 1, minWidth: 220 }}>
+                    <Typography
+                      variant="subtitle2"
+                      sx={{ px: 1.5, py: 1 }}
+                    >
+                      Select Language
+                    </Typography>
+
+                    <List component="nav" disablePadding>
+                      {languages.map((language) => (
+                        <ListItemButton
+                          key={language.code}
+                          selected={i18n === language.code}
+                          onClick={() =>
+                            handleLanguageChange(language.code)
+                          }
+                          sx={{ borderRadius: 1, mb: 0.5 }}
+                        >
+                          <ListItemText
+                            primary={
+                              <Stack
+                                direction="row"
+                                alignItems="center"
+                                justifyContent="space-between"
+                                spacing={2}
+                              >
+                                <Typography
+                                  variant="body1"
+                                  color="text.primary"
+                                >
+                                  {language.nativeLabel}
+                                </Typography>
+
+                                <Typography
+                                  variant="caption"
+                                  color="text.secondary"
+                                >
+                                  {language.codeLabel}
+                                </Typography>
+                              </Stack>
+                            }
+                          />
+                        </ListItemButton>
+                      ))}
+                    </List>
+                  </Box>
                 </MainCard>
               </ClickAwayListener>
             </Paper>

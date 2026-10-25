@@ -98,7 +98,7 @@ export default function UserList() {
           <ListItemAvatar>
             <Avatar alt="Avatar" src={avatar1} sx={{ ...(drawerOpen && { width: 46, height: 46 }) }} />
           </ListItemAvatar>
-          <ListItemText primary={user?.name} sx={{ ...(!drawerOpen && { display: 'none' }) }} secondary="UI/UX Designer" />
+          <ListItemText primary={user?.name} sx={{ ...(!drawerOpen && { display: 'none' }) }} secondary="Administrator" />
         </ListItem>
       </List>
       <Menu

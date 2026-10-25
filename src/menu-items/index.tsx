@@ -1,11 +1,8 @@
-
-
-
 import { NavItemType } from 'types/menu';
-import propertyManagement from './property-management';
+import supermarket from './supermarket';
 
 const menuItems: { items: NavItemType[] } = {
-  items: [propertyManagement]
+  items: [supermarket]
 };
 
 export default menuItems;

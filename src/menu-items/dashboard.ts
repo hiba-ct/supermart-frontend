@@ -1,43 +1,139 @@
-// project-imports
+
 import { useGetMenu } from 'api/menu';
 
-// assets
-import { Refresh, Home3, HomeTrendUp, Box1 } from 'iconsax-reactjs';
+import {
+  Refresh,
+  HomeTrendUp,
+  Box1,
+  ShoppingCart,
+  Shop,
+  Truck,
+  Chart,
+  People,
+  Calendar,
+  ReceiptItem,
+  Category
+} from 'iconsax-reactjs';
 
-// types
-import { NavItemType } from 'types/menu';
+import type { NavItemType } from 'types/menu';
+
+// ==============================|| SUPERMART ICONS ||============================== //
 
 const icons = {
-  navigation: Home3,
   dashboard: HomeTrendUp,
-  components: Box1,
+  products: Box1,
+  categories: Category,
+  inventory: Box1,
+  suppliers: Truck,
+  purchases: ShoppingCart,
+  sales: Shop,
+  returns: ReceiptItem,
+  reports: Chart,
+  employees: People,
+  attendance: Calendar,
   loading: Refresh
 };
 
+// ==============================|| SUPERMART LOADING MENU ||============================== //
+
 const loadingMenu: NavItemType = {
-  id: 'group-dashboard-loading',
-  title: 'dashboard',
+  id: 'group-supermart-loading',
+  title: 'SuperMart',
   type: 'group',
   icon: icons.loading,
   children: [
     {
-      id: 'dashboard1',
-      title: 'dashboard',
+      id: 'supermart-loading',
+      title: 'Supermarket',
       type: 'collapse',
-      icon: icons.loading,
+      icon: icons.dashboard,
       children: [
         {
-          id: 'default1',
-          title: 'loading',
+          id: 'products-loading',
+          title: 'Products',
           type: 'item',
-          url: '/dashboard/default',
+          icon: icons.products,
+          url: '/supermarket/products',
           breadcrumbs: false
         },
         {
-          id: 'analytics1',
-          title: 'loading',
+          id: 'categories-loading',
+          title: 'Categories',
           type: 'item',
-          url: '/dashboard/analytics',
+          icon: icons.categories,
+          url: '/supermarket/categories',
+          breadcrumbs: false
+        },
+        {
+          id: 'inventory-loading',
+          title: 'Inventory',
+          type: 'item',
+          icon: icons.inventory,
+          url: '/supermarket/inventory',
+          breadcrumbs: false
+        },
+        {
+          id: 'suppliers-loading',
+          title: 'Suppliers',
+          type: 'item',
+          icon: icons.suppliers,
+          url: '/supermarket/suppliers',
+          breadcrumbs: false
+        },
+        {
+          id: 'purchases-loading',
+          title: 'Purchases',
+          type: 'item',
+          icon: icons.purchases,
+          url: '/supermarket/purchases',
+          breadcrumbs: false
+        },
+        {
+          id: 'sales-loading',
+          title: 'Sales / POS',
+          type: 'item',
+          icon: icons.sales,
+          url: '/supermarket/sales',
+          breadcrumbs: false
+        },
+        {
+          id: 'returns-loading',
+          title: 'Sales Returns',
+          type: 'item',
+          icon: icons.returns,
+          url: '/supermarket/sales-returns',
+          breadcrumbs: false
+        },
+        {
+          id: 'reports-loading',
+          title: 'Reports',
+          type: 'item',
+          icon: icons.reports,
+          url: '/supermarket/reports',
+          breadcrumbs: false
+        }
+      ]
+    },
+    {
+      id: 'employees-loading',
+      title: 'Employees',
+      type: 'collapse',
+      icon: icons.employees,
+      children: [
+        {
+          id: 'employee-list-loading',
+          title: 'Employee List',
+          type: 'item',
+          icon: icons.employees,
+          url: '/supermarket/employees',
+          breadcrumbs: false
+        },
+        {
+          id: 'attendance-loading',
+          title: 'Attendance',
+          type: 'item',
+          icon: icons.attendance,
+          url: '/supermarket/attendance',
           breadcrumbs: false
         }
       ]
@@ -50,38 +146,42 @@ const loadingMenu: NavItemType = {
 export function MenuFromAPI() {
   const { menu, menuLoading } = useGetMenu();
 
-  if (menuLoading) return loadingMenu;
+  // Show SuperMart menu while the API menu is loading
+  if (menuLoading || !menu) {
+    return loadingMenu;
+  }
 
-  const subChildrenList = (children: NavItemType[]) => {
-    return children?.map((subList: NavItemType) => {
-      return fillItem(subList);
-    });
+  const subChildrenList = (children: NavItemType[] = []) => {
+    return children.map((subList) => itemList(subList));
   };
 
-  const itemList = (subList: NavItemType) => {
-    let list = fillItem(subList);
+  const itemList = (subList: NavItemType): NavItemType => {
+    const list = fillItem(subList);
 
-    // if collapsible item, we need to feel its children as well
-    if (subList.type === 'collapse') {
-      list.children = subChildrenList(subList.children!);
+    if (subList.type === 'collapse' && subList.children) {
+      list.children = subChildrenList(subList.children);
     }
+
     return list;
   };
 
-  const childrenList: NavItemType[] | undefined = menu?.children?.map((subList: NavItemType) => {
-    return itemList(subList);
-  });
+  const childrenList = menu.children?.map((subList) => itemList(subList));
 
-  let menuList = fillItem(menu, childrenList);
-  return menuList;
+  return fillItem(menu, childrenList);
 }
 
-function fillItem(item: NavItemType, children?: NavItemType[] | undefined) {
+// ==============================|| MAP MENU ICONS ||============================== //
+
+function fillItem(
+  item: NavItemType,
+  children?: NavItemType[]
+): NavItemType {
+  const iconName = item?.icon as keyof typeof icons;
+
   return {
     ...item,
     title: item?.title,
-    // @ts-ignore
-    icon: icons[item?.icon],
+    icon: icons[iconName] ?? item?.icon,
     ...(children && { children })
   };
 }

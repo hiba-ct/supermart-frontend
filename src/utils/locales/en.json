@@ -195,5 +195,16 @@
   "view": "View",
   "virtualized": "Virtualized",
   "widgets": "Widgets",
-  "more-items": "More Items"
+  "more-items": "More Items",
+
+"SuperMarket": "SuperMarket",
+"Products": "Products",
+"category": "Category",
+"Inventory": "Inventory",
+"Suppliers": "Suppliers",
+"Purchases": "Purchases",
+"Sales": "Sales",
+"Sales Returns": "Sales Returns",
+  "Reports": "Reports"
+
 }
