@@ -2,7 +2,7 @@ import { lazy, Suspense } from 'react';
 import Loadable from 'components/Loadable';
 import DashboardLayout from 'layout/Dashboard';
 import Sales from 'pages/supermarket/sales';
-import SuperMartHome from '../../public/SuperMartHome';
+
 
 
 

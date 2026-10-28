@@ -18,6 +18,10 @@ import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined
 import GitHubIcon from '@mui/icons-material/GitHub';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
+import { Link } from 'react-router-dom';
+import LoginIcon from '@mui/icons-material/Login';
+
+
 const features = [
   {
     title: 'Product Management',
@@ -135,6 +139,23 @@ export default function SuperMartHome() {
               >
                 About
               </Button>
+
+{/* <Button
+  component={Link}
+  to="/login"
+  variant="outlined"
+  startIcon={<LoginIcon />}
+  sx={{
+    borderColor: '#6554F0',
+    color: '#6554F0',
+    textTransform: 'none',
+    fontWeight: 700,
+    borderRadius: 2
+  }}
+>
+  Login
+</Button> */}
+
 
               <Button
                 variant="contained"

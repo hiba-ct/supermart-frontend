@@ -27,7 +27,7 @@ import {
   JWTContextType
 } from 'types/auth';
 
-
+const API_URL = import.meta.env.VITE_APP_API_URL;
 // ======================================================
 // INITIAL STATE
 // ======================================================
@@ -292,16 +292,13 @@ export const JWTProvider = ({
       // ----------------------------------------------
       // CALL YOUR SUPERMARKET SERVER
       // ----------------------------------------------
-
-      const response =
-        await axios.post(
-          'http://localhost:5000/api/auth/login',
-
-          {
-            email,
-            password
-          }
-        );
+const response = await axios.post(
+  `${API_URL}/api/auth/login`,
+  {
+    email,
+    password
+  }
+);
 
 
       console.log(
@@ -474,23 +471,15 @@ export const JWTProvider = ({
   ) => {
 
     try {
-
-      const response =
-        await axios.post(
-          'http://localhost:5000/api/auth/register',
-
-          {
-            name:
-              `${firstName} ${lastName}`,
-
-            email,
-
-            password,
-
-            role: 'admin'
-          }
-        );
-
+const response = await axios.post(
+  `${API_URL}/api/auth/register`,
+  {
+    name: `${firstName} ${lastName}`,
+    email,
+    password,
+    role: 'admin'
+  }
+);
 
       console.log(
         'Register response:',
